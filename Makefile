@@ -13,7 +13,7 @@ TESTS:=test_arena test_pool
 OBJ_PATHS=$(addprefix $(BUILD_DIR)/, $(OBJ))
 
 define build_test
-	$(CC) $(CFLAGS) -o $(TEST_DIR)/$(1) $(1).c $(BUILD_DIR)/$(EXEC)
+	$(CC) $(CFLAGS) -I include -o $(TEST_DIR)/$(1) $(1).c $(BUILD_DIR)/$(EXEC)
 
 endef
 
@@ -48,7 +48,7 @@ $(BUILD_DIR)/$(EXEC): $(OBJ_PATHS)
 	ar rcs $(BUILD_DIR)/$(EXEC) $(OBJ_PATHS)
 
 $(BUILD_DIR)/%.o: %.c $(BUILD_DIR)
-	$(CC) $(CFLAGS) -c -o $@ $< 
+	$(CC) $(CFLAGS) -I include -c -o $@ $< 
 
 $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
