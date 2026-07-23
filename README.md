@@ -10,6 +10,7 @@ Right now the following data structures are supported:
  - Queue
  - Bloom filter
  - Fenwick tree
+
 There are also following algorithms:
  - Arena allocator
  - Pool allocator
@@ -27,7 +28,7 @@ in repositary's root. Run `make help` to see all available commands.
 Usage examples can be seen in tests, but overall code is pretty self-explanatory.
 
 ## Testing
-All data structures and algorithms are covered by unit tests. They can be ran by running `make test` in repo's root directory. #[utest][https://github.com/sheredom/utest.h] is used as a testing framework.
+All data structures and algorithms are covered by unit tests. They can be ran by running `make test` in repo's root directory. [utest][https://github.com/sheredom/utest.h] is used as a testing framework.
 
 ## Licensing
 This is free and unencumbered software released into the public domain.
