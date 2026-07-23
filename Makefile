@@ -1,13 +1,11 @@
 CC:=clang
-LD:=gcc
 
 CFLAGS:=-Wall -Wextra -Wpedantic -Werror -std=c23
-LDFLAGS:=-Wall -Wextra -Wpedantic -Werror
 
 EXEC:=libtorin.a
 BUILD_DIR:=build
 TEST_DIR:=tests
-OBJ:=arena.o pool.o
+OBJ:=arena.o pool.o ring.o
 TESTS:=test_arena test_pool
 
 OBJ_PATHS=$(addprefix $(BUILD_DIR)/, $(OBJ))
@@ -48,7 +46,7 @@ $(BUILD_DIR)/$(EXEC): $(OBJ_PATHS)
 	ar rcs $(BUILD_DIR)/$(EXEC) $(OBJ_PATHS)
 
 $(BUILD_DIR)/%.o: %.c $(BUILD_DIR)
-	$(CC) $(CFLAGS) -I include -c -o $@ $< 
+	$(CC) $(CFLAGS) -I include -Og -c -o $@ $< 
 
 $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
