@@ -5,8 +5,8 @@ CFLAGS:=-Wall -Wextra -Wpedantic -Werror -std=c23
 EXEC:=libtorin.a
 BUILD_DIR:=build
 TEST_DIR:=tests
-OBJ:=arena.o pool.o
-TESTS:=test_arena test_pool
+OBJ:=arena.o pool.o ring.o
+TESTS:=test_arena test_pool test_ring
 
 OBJ_PATHS=$(addprefix $(BUILD_DIR)/, $(OBJ))
 
