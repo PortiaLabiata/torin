@@ -6,7 +6,6 @@ This library is mostly an educational project. It is a collection of simple yet 
 Right now the following data structures are supported:
  - Ring buffer
  - Hash table
- - Stack
  - Queue
  - Bloom filter
  - Fenwick tree
@@ -17,13 +16,20 @@ There are also following algorithms:
  - Slab allocator
 
 ## Installation and usage
-This library is intended to be used as a static library. To build it, simply run
+This library is intended to be used as a static library. While using `make` to build it is possible, it is recommended to use [nob][https://github.com/tsoding/nob.h] to do that. To build with `nob`, run the following commands:
+```sh
+
+cc nob.c -o nob
+./nob
+```
+
+To build this project with `make`, simply run
 
 ```sh
 make all
 ```
 
-in repositary's root. Run `make help` to see all available commands.
+in repository's root. Run `make help` to see all available commands.
 
 Usage examples can be seen in tests, but overall code is pretty self-explanatory.
 
