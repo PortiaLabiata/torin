@@ -12,16 +12,13 @@
 #define CC "clang"
 #define LD "gcc"
 
-#define SOURCES_LEN 3
-#define TESTS_LEN 3
-
-static const char *sources[SOURCES_LEN] = {
+static const char *sources[] = {
     "arena",
     "pool",
     "ring",
 };
 
-static const char *tests[TESTS_LEN] = {
+static const char *tests[] = {
     "test_arena",
     "test_pool",
     "test_ring",
@@ -35,7 +32,7 @@ typedef enum {
 } command_t;
 
 char *add_extension(const char *name, const char *ext) {
-    char *buffer = malloc(strlen(name) + strlen(ext) + 2);
+    char *buffer = malloc(strlen(name) + strlen(ext));
     if (!buffer) {
         return NULL;
     }
@@ -66,26 +63,23 @@ command_t parse_args(int argc, char **argv) {
     return CMD_UNKNOWN;
 }
 
-int build_all(const char **s, size_t len) {
+int build_all() {
     Nob_Cmd ar_cmd = {0};
     int result = 0;
-    char **ptrs = alloca(len*2*sizeof(char*));
+    size_t sources_len = sizeof(sources)/sizeof(const char*);
+    char **ptrs = alloca(sources_len*2);
 
     nob_cmd_append(&ar_cmd, "ar", "rcs", "libtorin.a");
 
     size_t i = 0;
-    for (; i < len; i++) {
+    for (; i < sources_len; i++) {
         Nob_Cmd cmd = {0};
 
-        char *src_name = add_extension(s[i], "c");
-        char *obj_name = add_extension(s[i], "o");
+        char *src_name = add_extension(sources[i], "c");
+        char *obj_name = add_extension(sources[i], "o");
 
         ptrs[i*2] = src_name;
         ptrs[i*2+1] = obj_name;
-
-        if (nob_file_exists(obj_name)) {
-            continue;
-        }
 
         nob_cmd_append(&cmd, CC,
                         "-Wall", "-Wextra","-Wpedantic", "-Og",
@@ -115,16 +109,26 @@ cleanup:
     return result;
 }
 
-int clean() {
+int test() {
     int result = 0;
-    size_t sources_len = sizeof(sources)/sizeof(const char*);
-    size_t i = 0;
-    char **ptrs = alloca(sources_len);
+    size_t tests_len = sizeof(tests)/sizeof(const char*);
+    char **ptrs = alloca(tests_len*sizeof(char*));
 
-    for (; i < sources_len; i++) {
-        char *obj_name = add_extension(sources[i], "o");
-        ptrs[i] = obj_name;
-        if (!nob_delete_file(obj_name)) {
+    size_t i = 0;
+    for (; i < tests_len; i++) {
+        Nob_Cmd cmd = {0};
+
+        char *src_name = add_extension(tests[i], "c");
+        ptrs[i] = src_name;
+
+        nob_cmd_append(&cmd, CC,
+                        "-Wall", "-Wextra","-Wpedantic", "-Og",
+                        src_name, "-o", 
+                        tests[i], "-I", 
+                        "include", "-std=c23",
+                       "libtorin.a");
+
+        if (!nob_cmd_run(&cmd)) {
             result = 1;
             goto cleanup;
         }
@@ -138,17 +142,35 @@ cleanup:
     return result;
 }
 
+int clean() {
+    int result = 0;
+    size_t sources_len = sizeof(sources)/sizeof(const char*);
+    size_t i = 0;
+
+    for (; i < sources_len; i++) {
+        char *obj_name = add_extension(sources[i], "o");
+        nob_delete_file(obj_name);
+        free(obj_name);
+    }
+
+    for (size_t j = 0; j < sizeof(tests)/sizeof(const char*); j++) {
+        nob_delete_file(tests[j]);
+    }
+
+    return result;
+}
+
 int main(int argc, char **argv) {
     GO_REBUILD_URSELF(argc, argv);
 
     const command_t command = parse_args(argc, argv);
     switch (command) {
     case CMD_MAKE:
-        return build_all(sources, SOURCES_LEN);
+        return build_all();
     case CMD_CLEAN:
         return clean();
     case CMD_TEST:
-        return build_all(tests, TESTS_LEN);
+        return test();
     case CMD_UNKNOWN:
         nob_log(NOB_ERROR, "Invalid command: %s", argv[1]);
         return 1;
