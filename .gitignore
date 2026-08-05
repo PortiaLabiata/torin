@@ -1,3 +1,8 @@
-build/*
-tests/*
 compile_commands.json
+*.o
+*.a
+test_ring
+test_arena
+test_pool
+nob
+nob.old

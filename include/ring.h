@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <assert.h>
+#include <stdbool.h>
 
 #ifndef RING_ASSERT
     #define RING_ASSERT assert
