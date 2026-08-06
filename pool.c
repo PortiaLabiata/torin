@@ -30,7 +30,7 @@ void pool_init_number(pool *self, wa_t *wa, size_t size, size_t n) {
 }
 
 void pool_init_entries(pool *self, wa_t *wa, size_t chunk_size, size_t n) {
-    _pool_init(self, wa, chunk_size * n, n);
+    _pool_init(self, wa, chunk_size * n, chunk_size);
 }
 
 void *pool_alloc(pool *self) {

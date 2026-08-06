@@ -16,12 +16,14 @@ static const char *sources[] = {
     "arena",
     "pool",
     "ring",
+    "set",
 };
 
 static const char *tests[] = {
     "test_arena",
     "test_pool",
     "test_ring",
+    "test_set",
 };
 
 typedef enum {
@@ -122,11 +124,11 @@ int test() {
         ptrs[i] = src_name;
 
         nob_cmd_append(&cmd, CC,
-                        "-Wall", "-Wextra","-Wpedantic", "-Og",
+                        "-Wall", "-Wextra","-Wpedantic", "-O0",
                         src_name, "-o", 
                         tests[i], "-I", 
                         "include", "-std=c23",
-                       "libtorin.a");
+                       "-g", "libtorin.a");
 
         if (!nob_cmd_run(&cmd)) {
             result = 1;
